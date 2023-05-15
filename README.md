@@ -1,4 +1,4 @@
-# AutoRA Experimentalist Sampler Template
+# Falsification Sampler
 
 ## Quickstart Guide
 
