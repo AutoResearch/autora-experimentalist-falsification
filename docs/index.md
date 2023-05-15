@@ -1,5 +1,4 @@
-# Introduction
-
+# Falsification Sampler
 
 Include inline mathematics like this: \(3 < 4\)
 
