@@ -1,4 +1,4 @@
-# Falsification Sampler
+# AutoRA Falsification Sampler
 
 ## Quickstart Guide
 
