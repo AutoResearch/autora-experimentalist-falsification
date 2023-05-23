@@ -1,11 +1,16 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 INHERIT: mkdocs/base.yml  # use the shared AutoRA configuration by default
 
-site_name: AutoRA Falsification Pooler
+site_name: AutoRA Falsification Experimentalist
 repo_url: 'https://github.com/AutoResearch/autora-experimentalist-falsification-sampler'
 
 nav:
-- Home: 'index.md'
-- Quickstart: 'quickstart.md'
-- Examples:
-  - Basic Usage: 'basic-usage.ipynb'
+- Pooler:
+  - Home: 'index_pooler.md'
+  - Quickstart: 'quickstart_pooler.md'
+  - Examples:
+    - Basic Usage: 'basic-usage_pooler.ipynb'
+- Sampler: 'index-sampler.md'
+  - Quickstart: 'quickstart-sampler.md'
+  - Examples:
+    - Basic Usage: 'basic-usage-sampler.ipynb'

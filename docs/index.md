@@ -1,4 +1,4 @@
-# Novelty Sampler
+# Falsification Pooler and Sampler
 
 The novelty sampler identifies experimental conditions $\vec{x}' \in X'$ with respect to
 a pairwise distance metric applied to existing experimental conditions $\vec{x} \in X$:
