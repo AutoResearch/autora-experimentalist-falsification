@@ -1,9 +1,9 @@
 [project]
 # UPDATE THIS BEFORE PUBLISHING
-name = "autora-experimentalist-template"
-description = "AutoRA Experimentalist Sampler Template"
-authors = [{ name = "Max Mustermann", email = "max@mustermann.de" }]
-version = "0.1.0"
+name = "autora-experimentalist-falsification-sampler"
+description = "AutoRA Falsification Experimentalist"
+authors = [{ name = "Sebastian Musslick", email = "sebastian@musslick.de" }]
+dynamic = ["version"]
 
 readme = "README.md"
 license = { text = "MIT License" }
@@ -12,6 +12,7 @@ requires-python = ">=3.8.10,<3.11"
 # ADD NEW DEPENDENCIES HERE
 dependencies = [
     "autora-core",
+    "torch"
 ]
 
 [project.optional-dependencies]
