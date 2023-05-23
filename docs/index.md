@@ -1,32 +1,66 @@
-# Falsification Sampler
+# Novelty Sampler
 
-Include inline mathematics like this: \(3 < 4\)
+The novelty sampler identifies experimental conditions $\vec{x}' \in X'$ with respect to
+a pairwise distance metric applied to existing experimental conditions $\vec{x} \in X$:
 
-Include block mathematics like this (don't forget the empty lines above and below the block):
-
-$$  
-y + 1 = 4 
+$$
+\underset{\vec{x}'}{\arg\max}~f(d(\vec{x}, \vec{x}'))
 $$
 
-... or this:
+where $f$ is an integration function applied to all pairwise  distances.
 
-\[
-E(\mathbf{v}, \mathbf{h}) = -\sum_{i,j}w_{ij}v_i h_j - \sum_i b_i v_i - \sum_j c_j h_j
-\]
+## Example
 
-... or this:
+For instance,
+the integration function $f(x)=\min(x)$ and distance function $d(x, x')=|x-x'|$ identifies
+condition $\vec{x}'$ with the greatest minimal Euclidean distance to all
+existing conditions in $\vec{x} \in X$.
 
-\begin{align}
-    p(v_i=1|\mathbf{h}) & = \sigma\left(\sum_j w_{ij}h_j + b_i\right) \\
-    p(h_j=1|\mathbf{v}) & = \sigma\left(\sum_i w_{ij}v_i + c_j\right)
-\end{align}
+$$
+\underset{\vec{x}}{\arg\max}~\min_i(\sum_{j=1}^n(x_{i,j} - x_{i,j}')^2)
+$$
+
+To illustrate this sampling strategy, consider the following four experimental conditions that
+were already probed:
 
 
-Include inline mathematics like this \(x < 1\) or this $c = 3$ or this
-or block mathematics:
+| $x_{i,0}$ | $x_{i,1}$ | $x_{i,2}$ |
+|-----------|-----------|-----------|
+| 0         | 0         | 0         |
+| 1         | 0         | 0         |
+| 0         | 1         | 0         |
+| 0         | 0         | 1         |
 
-\[
-x + 1 = 3
-\]
+Fruthermore, let's consider the following three candidate conditions $X'$:
+
+| $x_{i,0}'$ | $x_{i,1}'$ | $x_{i,2}'$ |
+|------------|------------|------------|
+| 1          | 1          | 1          |
+| 2          | 2          | 2          |
+| 3          | 3          | 3          |
+
+
+If the novelty sampler is tasked to identify two novel conditions, it will select
+the last two candidate conditions $x'_{1,j}$ and $x'_{2,j}$ because they have the greatest
+minimal distance to all existing conditions $x_{i,j}$:
+
+### Example Code
+```python
+import numpy as np
+from autora.experimentalist.sampler.novelty import novelty_sampler, novelty_score_sampler
+
+# Specify X and X'
+X = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+X_prime = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]])
+
+# Here, we choose to identify two novel conditions
+n = 2
+X_sampled = novelty_sampler(condition_pool=X_prime, reference_conditions=X, num_samples=n)
+
+# We may also obtain samples along with their z-scored novelty scores  
+(X_sampled, scores) = novelty_score_sampler(condition_pool=X_prime, reference_conditions=X, num_samples=n)
+```
+
+
 
 
