@@ -40,7 +40,7 @@ def synthetic_logr_model():
 
 
 @pytest.fixture
-def synthetic_linear_model():
+def synthetic_linr_model():
     """
     Creates linear regression based on synthetic data_closed_loop.
     """
@@ -106,11 +106,11 @@ def test_falsification_pooler_classification(
            (new_conditions[1,0] > 0.99 and new_conditions [1,1] > 0.99)
 
 
-def test_falsification_pooler_regression(synthetic_linear_model, seed):
+def test_falsification_pooler_regression(synthetic_linr_model, seed):
 
     # Import model and data_closed_loop
     conditions, observations = get_sin_data()
-    model = synthetic_linear_model
+    model = synthetic_linr_model
 
     # Specify independent variables
     iv = IV(
