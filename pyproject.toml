@@ -1,6 +1,6 @@
 [project]
 # UPDATE THIS BEFORE PUBLISHING
-name = "autora-experimentalist-falsification-sampler"
+name = "autora-experimentalist-falsification"
 description = "AutoRA Falsification Experimentalist"
 authors = [{ name = "Sebastian Musslick", email = "sebastian@musslick.de" }]
 dynamic = ["version"]
@@ -22,7 +22,7 @@ dev = [
 
 [project.urls]
 homepage = "http://www.empiricalresearch.ai"
-repository = "https://github.com/AutoResearch/autora-theorist-template"
+repository = "https://github.com/AutoResearch/autora-experimentalist-falsification"
 documentation = "https://autoresearch.github.io/autora/"
 
 [build-system]
