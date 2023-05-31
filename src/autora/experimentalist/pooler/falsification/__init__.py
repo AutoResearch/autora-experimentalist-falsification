@@ -386,31 +386,31 @@ def plot_falsification_diagnostics(
     plot_input = plot_input[plot_input_order]
     popper_target = popper_target[plot_input_order]
     # popper_prediction = popper_prediction[plot_input_order]
-    plt.plot(popper_input_full, popper_prediction.detach().numpy(), label="prediction")
+    plt.plot(popper_input_full, popper_prediction.detach().numpy(), label="Predicted MSE of the Model")
     plt.scatter(
-        plot_input, popper_target.detach().numpy(), s=20, c="red", label="target"
+        plot_input, popper_target.detach().numpy(), s=20, c="red", label="True MSE of the Model"
     )
     plt.xlabel("x")
-    plt.ylabel("model MSE")
-    plt.title("popper network prediction")
+    plt.ylabel("MSE of Model")
+    plt.title("Prediction of Falsification Sampler")
     plt.legend()
     plt.show()
 
     # CONVERGENCE PLOT
     plt.plot(losses)
-    plt.xlabel("epoch")
-    plt.ylabel("loss")
-    plt.title("loss for popper network")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Loss for the Popper Network")
     plt.show()
 
     # MODEL PREDICTION PLOT
     model_prediction = model_prediction[plot_input_order]
     target = target[plot_input_order]
-    plt.plot(plot_input, model_prediction, label="model prediction")
-    plt.scatter(plot_input, target, s=20, c="red", label="target")
+    plt.plot(plot_input, model_prediction, label="Model Prediction")
+    plt.scatter(plot_input, target, s=20, c="red", label="Data")
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("model prediction vs. target")
+    plt.title("Model Prediction vs. Data")
     plt.legend()
     plt.show()
 
