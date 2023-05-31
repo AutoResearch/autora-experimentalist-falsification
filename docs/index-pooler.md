@@ -1,7 +1,7 @@
 # Falsification Pooler
 
 The falsification pooler identifies novel experimental conditions $X'$ under 
-which the loss $\hat{\mathcal{L}}(M,X,Y,\vec{x})$ of the best 
+which the loss $\hat{\mathcal{L}}(M,X,Y,X')$ of the best 
 candidate model is predicted to be the highest. This loss is 
 approximated with a multi-layer perceptron, which is trained to 
 predict the loss of a candidate model, $M$, given experiment 
