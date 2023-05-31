@@ -8,7 +8,7 @@ predict the loss of a candidate model, $M$, given experiment
 conditions $X$  and dependent measures $Y$ that have already been probed:
 
 $$
-\underset{\vec{x'}}{\argmax}~\hat{\mathcal{L}}(M,X,Y,\vec{x}).
+\underset{\vec{x'}}{\operatorname{argmax}~\hat{\mathcal{L}}(M,X,Y,\vec{x}).
 $$
 
 
