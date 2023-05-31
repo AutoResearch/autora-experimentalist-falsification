@@ -5,7 +5,7 @@ site_name: AutoRA Falsification Pooler Experimentalist
 repo_url: 'https://github.com/AutoResearch/autora-experimentalist-falsification'
 
 nav:
-- Home: 'index-pooler.md'
-- Quickstart: 'quickstart-pooler.md'
+- Home: 'pooler-index.md'
+- Quickstart: 'pooler-quickstart.md'
 - Examples:
-  - Basic Usage: 'basic-usage-pooler.ipynb'
+  - Basic Usage: 'Pooler Basic Usage.ipynb'
