@@ -7,6 +7,7 @@ from autora.experimentalist.pipeline import Pipeline
 from autora.experimentalist.sampler.falsification import (
     falsification_sampler,
     falsification_score_sampler,
+    falsification_score_sampler_from_predictions,
 )
 from autora.variable import DV, IV, ValueType, VariableCollection
 from tests.test_exp_falsification_pooler import get_sin_data, get_xor_data
@@ -217,7 +218,7 @@ def test_falsification_regression_without_model(
     Y_predicted = model.predict(X_train)
 
     # get scores from falsification sampler
-    X_selected, scores = falsification_score_sampler(
+    X_selected, scores = falsification_score_sampler_from_predictions(
         condition_pool=X,
         predicted_observations=Y_predicted,
         reference_conditions=X_train,
@@ -254,7 +255,7 @@ def test_falsification_reconstruction_without_model(
     X_reconstructed = X_train + np.sin(X_train)
 
     # get scores from falsification sampler
-    X_selected, scores = falsification_score_sampler(
+    X_selected, scores = falsification_score_sampler_from_predictions(
         condition_pool=X,
         predicted_observations=X_reconstructed,
         reference_conditions=X_train,
@@ -274,3 +275,55 @@ def test_falsification_reconstruction_without_model(
     # check if the data points with the highest predicted error were selected
     assert np.round(X_selected[0, 0], 4) == 1.8 or np.round(X_selected[0, 0], 4) == 4.8
     assert np.round(X_selected[1, 0], 4) == 1.8 or np.round(X_selected[1, 0], 4) == 4.8
+
+
+def test_doc_example():
+    # Specify X and Y
+    X = np.linspace(0, 2 * np.pi, 100)
+    Y = np.sin(X)
+    X_prime = np.linspace(0, 6.5, 14)
+
+    # We need to provide the pooler with some metadata specifying the independent and dependent variables
+    # Specify independent variable
+    iv = IV(
+        name="x",
+        value_range=(0, 2 * np.pi),
+    )
+
+    # specify dependent variable
+    dv = DV(
+        name="y",
+        type=ValueType.REAL,
+    )
+
+    # Variable collection with ivs and dvs
+    metadata = VariableCollection(
+        independent_variables=[iv],
+        dependent_variables=[dv],
+    )
+
+    # Fit a linear regression to the data
+    model = LinearRegression()
+    model.fit(X.reshape(-1, 1), Y)
+
+    # Sample four novel conditions
+    X_selected = falsification_sampler(
+        condition_pool=X_prime,
+        model=model,
+        reference_conditions=X,
+        reference_observations=Y,
+        metadata=metadata,
+        num_samples=4,
+    )
+
+    # convert Iterable to numpy array
+    X_selected = np.array(list(X_selected))
+
+    # We may also obtain samples along with their z-scored novelty scores
+    X_selected, scores = falsification_score_sampler(
+        condition_pool=X_prime,
+        model=model,
+        reference_conditions=X,
+        reference_observations=Y,
+        metadata=metadata,
+        num_samples=4)
