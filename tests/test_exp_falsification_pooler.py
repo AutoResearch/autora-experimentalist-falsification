@@ -157,3 +157,46 @@ def test_falsification_pooler_regression(synthetic_linr_model, seed):
         assert condition < 0.1 or condition > 6.1 or \
                (condition < 2.5 and condition > 1.5)  or \
                (condition < 5 and condition > 4)
+
+def test_doc_example():
+    # Specify X and Y
+    X = np.linspace(0, 2 * np.pi, 100)
+    Y = np.sin(X)
+
+    # We need to provide the pooler with some metadata specifying the independent and dependent variables
+    # Specify independent variable
+    iv = IV(
+        name="x",
+        value_range=(0, 2 * np.pi),
+    )
+
+    # specify dependent variable
+    dv = DV(
+        name="y",
+        type=ValueType.REAL,
+    )
+
+    # Variable collection with ivs and dvs
+    metadata = VariableCollection(
+        independent_variables=[iv],
+        dependent_variables=[dv],
+    )
+
+    # Fit a linear regression to the data
+    model = LinearRegression()
+    model.fit(X.reshape(-1, 1), Y)
+
+    # Sample four novel conditions
+    X_sampled = falsification_pooler(
+        model=model,
+        reference_conditions=X,
+        reference_observations=Y,
+        metadata=metadata,
+        num_samples=4,
+        limit_repulsion=0.01,
+    )
+
+    # convert Iterable to numpy array
+    X_sampled = np.array(list(X_sampled))
+
+    print(X_sampled)
