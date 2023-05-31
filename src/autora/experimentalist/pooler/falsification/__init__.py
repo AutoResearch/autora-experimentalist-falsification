@@ -390,9 +390,9 @@ def plot_falsification_diagnostics(
     plt.scatter(
         plot_input, popper_target.detach().numpy(), s=20, c="red", label="True MSE of the Model"
     )
-    plt.xlabel("x")
+    plt.xlabel("Experimental Condition X")
     plt.ylabel("MSE of Model")
-    plt.title("Prediction of Falsification Sampler")
+    plt.title("Prediction of Falsification Network")
     plt.legend()
     plt.show()
 
@@ -400,7 +400,7 @@ def plot_falsification_diagnostics(
     plt.plot(losses)
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
-    plt.title("Loss for the Popper Network")
+    plt.title("Loss for the Falsification Network")
     plt.show()
 
     # MODEL PREDICTION PLOT
@@ -408,9 +408,9 @@ def plot_falsification_diagnostics(
     target = target[plot_input_order]
     plt.plot(plot_input, model_prediction, label="Model Prediction")
     plt.scatter(plot_input, target, s=20, c="red", label="Data")
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("Model Prediction vs. Data")
+    plt.xlabel("Experimental Condition X")
+    plt.ylabel("Observation Y")
+    plt.title("Model Prediction Vs. Data")
     plt.legend()
     plt.show()
 
