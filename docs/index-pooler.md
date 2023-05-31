@@ -1,6 +1,6 @@
 # Falsification Pooler
 
-The falsification pooler identifies experiment conditions under 
+The falsification pooler identifies novel experimental conditions $X'$ under 
 which the loss $\hat{\mathcal{L}}(M,X,Y,\vec{x})$ of the best 
 candidate model is predicted to be the highest. This loss is 
 approximated with a multi-layer perceptron, which is trained to 
@@ -8,7 +8,7 @@ predict the loss of a candidate model, $M$, given experiment
 conditions $X$  and dependent measures $Y$ that have already been probed:
 
 $$
-\underset{\vec{x'}}{argmax}~\hat{\mathcal{L}}(M,X,Y,\vec{x}).
+\underset{X'}{argmax}~\hat{\mathcal{L}}(M,X,Y,X').
 $$
 
 
@@ -17,10 +17,10 @@ $$
 To illustrate the falsification strategy, consider a dataset representing the sinus function:
 
 $$
-f(x) = \sin(x).
+f(X) = \sin(X).
 $$
 
-The dataset consists of 100 data points ranging from $x=0$ to $x=2\pi$.
+The dataset consists of 100 data points ranging from $X=0$ to $X=2\pi$.
 
 In addition, let's consider a linear regression as a model ($M$) of the data. 
 
@@ -33,13 +33,13 @@ One can observe that the linear regression is a poor fit for the sinus data, in 
 extrema of the sinus function, as well as the lower and upper bounds of the domain.
 
 The figure below shows the mean-squared error (MSE) of the linear regression 
-as a function of the input variable $x$ (red dots):
+as a function of the input $X$ (red dots):
 
 ![MSE of Linear Regression](pooler-mse.png)
 
 The falsification sampler attempts to predict the MSE of the linear regression using a neural network (shown in blue).
 
-Once the falsiifcaiton sampler has been trained, it can be used to identify conditions $X'$ 
+Once the falsiifcaiton sampler has been trained, it can be used to identify novel experimental conditions $X'$ 
 that are predicted to maximize the predicted MSE, such as at the boundaries of the domain, 
 as well as around the extrema of the sinus function. An example output of the falsification sampler is:
 
@@ -52,7 +52,7 @@ as well as around the extrema of the sinus function. An example output of the fa
 
 To prevent the falsification sampler from sampling at the limits of the domain ($0$ and $2/pi$),
 it can be provided with optional parameter ``limit_repulsion`` that bias samples for new
-experiment conditions away from the boundaries of $x$, as shown in the example below.
+experimental conditions away from the boundaries of $X$, as shown in the example below.
 
 ### Example Code
 ```python
