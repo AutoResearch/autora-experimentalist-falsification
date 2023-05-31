@@ -19,8 +19,8 @@ for path in source_paths + special_paths:
 
     if parts[-1] == "__init__":
         parts = parts[:-1]
-        doc_path = doc_path.with_name("index.md")
-        full_doc_path = full_doc_path.with_name("index.md")
+        doc_path = doc_path.with_name("index-pooler.md")
+        full_doc_path = full_doc_path.with_name("index-pooler.md")
     elif parts[-1] == "__main__":
         continue
 
