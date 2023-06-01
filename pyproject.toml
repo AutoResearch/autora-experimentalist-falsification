@@ -26,5 +26,7 @@ repository = "https://github.com/AutoResearch/autora-experimentalist-falsificati
 documentation = "https://autoresearch.github.io/autora/"
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
