@@ -35,7 +35,7 @@ extrema of the sine function, as well as the lower and upper bounds of the domai
 The figure below shows the mean-squared error (MSE) of the linear regression 
 as a function of the input $X$ (red dots):
 
-![MSE of Linear Regression](pooler-mse.png)
+![MSE of Linear Regression](mse.png)
 
 The falsification sampler attempts to predict the MSE of the linear regression using a neural network (shown in blue).
 
