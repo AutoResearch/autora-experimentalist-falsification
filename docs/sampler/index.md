@@ -27,7 +27,7 @@ In addition, let's consider a linear regression as a model ($M$) of the data.
 The following figure illustrates the prediction of the fitted linear regression
 (shown in blue) for the pre-collected sine dataset (conditions $X$ and observations $Y$; shown in red):
 
-![Linear Regression vs. Sinus Data](pooler-model-vs-data.png)
+![Linear Regression vs. Sinus Data](model-vs-data.png)
 
 One can observe that the linear regression is a poor fit for the sine data, in particular for regions around the 
 extrema of the sine function, as well as the lower and upper bounds of the domain.
@@ -35,7 +35,7 @@ extrema of the sine function, as well as the lower and upper bounds of the domai
 The figure below shows the mean-squared error (MSE) of the linear regression 
 as a function of the input $X$ (red dots):
 
-![MSE of Linear Regression](pooler-mse.png)
+![MSE of Linear Regression](mse.png)
 
 The falsification sampler attempts to predict the MSE of the linear regression using a neural network (shown in blue).
 
