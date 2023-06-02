@@ -4,10 +4,8 @@ name = "autora-experimentalist-falsification"
 description = "AutoRA Falsification Experimentalist"
 authors = [{ name = "Sebastian Musslick", email = "sebastian@musslick.de" }]
 dynamic = ["version"]
-
 readme = "README.md"
 license = { text = "MIT License" }
-requires-python = ">=3.8.10,<3.11"
 
 # ADD NEW DEPENDENCIES HERE
 dependencies = [
