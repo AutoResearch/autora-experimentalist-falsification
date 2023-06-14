@@ -13,8 +13,10 @@ from autora.experimentalist.pooler.falsification import (
 )
 from autora.variable import ValueType, VariableCollection
 
+from autora.utils.deprecation import deprecated_alias
 
-def falsification_sampler(
+
+def falsification_sample(
     condition_pool,
     model,
     reference_conditions: np.ndarray,
@@ -218,3 +220,5 @@ def falsification_score_sampler_from_predictions(
     sorted_score = score[np.argsort(score)[::-1]]
 
     return sorted_X[:num_samples], sorted_score[:num_samples]
+
+falsification_sampler = deprecated_alias(falsification_sample, "falsification_sampler")

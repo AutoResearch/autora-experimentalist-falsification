@@ -8,8 +8,10 @@ from torch.autograd import Variable
 
 from autora.variable import ValueType, VariableCollection
 
+from autora.utils.deprecation import deprecated_alias
 
-def falsification_pooler(
+
+def falsification_pool(
     model,
     reference_conditions: np.ndarray,
     reference_observations: np.ndarray,
@@ -478,3 +480,5 @@ def class_to_onehot(y: np.array, n_classes: Optional[int] = None):
     output_shape = input_shape + (n_classes,)
     categorical = np.reshape(categorical, output_shape)
     return categorical
+
+falsification_pooler = deprecated_alias(falsification_pool, "falsification_pooler")
