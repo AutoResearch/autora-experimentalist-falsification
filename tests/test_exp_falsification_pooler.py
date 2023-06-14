@@ -3,7 +3,7 @@ import pytest
 import torch
 from sklearn.linear_model import LinearRegression, LogisticRegression
 
-from autora.experimentalist.pooler.falsification import falsification_pooler
+from autora.experimentalist.pooler.falsification import falsification_pool
 from autora.variable import DV, IV, ValueType, VariableCollection
 
 
@@ -50,7 +50,7 @@ def synthetic_linr_model():
     return model
 
 
-def test_falsification_pooler_classification(
+def test_falsification_pool_classification(
     synthetic_logr_model, seed
 ):
 
@@ -82,7 +82,7 @@ def test_falsification_pooler_classification(
     )
 
     # Run falsification pooler
-    new_conditions = falsification_pooler(
+    new_conditions = falsification_pool(
         model=model,
         reference_conditions=conditions,
         reference_observations=observations,
@@ -106,7 +106,7 @@ def test_falsification_pooler_classification(
            (new_conditions[1,0] > 0.99 and new_conditions [1,1] > 0.99)
 
 
-def test_falsification_pooler_regression(synthetic_linr_model, seed):
+def test_falsification_pool_regression(synthetic_linr_model, seed):
 
     # Import model and data_closed_loop
     conditions, observations = get_sin_data()
@@ -135,7 +135,7 @@ def test_falsification_pooler_regression(synthetic_linr_model, seed):
         dependent_variables=[dv],
     )
 
-    new_conditions = falsification_pooler(
+    new_conditions = falsification_pool(
         model=model,
         reference_conditions=conditions,
         reference_observations=observations,
@@ -187,7 +187,7 @@ def test_doc_example():
     model.fit(X.reshape(-1, 1), Y)
 
     # Sample four novel conditions
-    X_sampled = falsification_pooler(
+    X_sampled = falsification_pool(
         model=model,
         reference_conditions=X,
         reference_observations=Y,
