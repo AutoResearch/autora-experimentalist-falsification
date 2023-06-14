@@ -37,11 +37,11 @@ as a function of the input $X$ (red dots):
 
 ![MSE of Linear Regression](mse.png)
 
-The falsification sampler attempts to predict the MSE of the linear regression using a neural network (shown in blue).
+The falsification pooler attempts to predict the MSE of the linear regression using a neural network (shown in blue).
 
-Once the falsiifcaiton sampler has been trained, it can be used to identify novel experimental conditions $X'$ 
+Once the falsiifcaiton pooler has been trained, it can be used to identify novel experimental conditions $X'$ 
 that are predicted to maximize the predicted MSE, such as at the boundaries of the domain, 
-as well as around the extrema of the sine function. An example output of the falsification sampler is:
+as well as around the extrema of the sine function. An example output of the falsification pooler is:
 
 ````
 [0.        ]
@@ -50,7 +50,7 @@ as well as around the extrema of the sine function. An example output of the fal
 [6.28318531]]
 ````
 
-To prevent the falsification sampler from sampling at the limits of the domain ($0$ and $2/pi$),
+To prevent the falsification pooler from sampling at the limits of the domain ($0$ and $2/pi$),
 it can be provided with optional parameter ``limit_repulsion`` that bias samples for new
 experimental conditions away from the boundaries of $X$, as shown in the example below.
 
