@@ -13,5 +13,5 @@ pip install -U autora["experimentalist-falsification"]
 
 Check your installation by running:
 ```shell
-python -c "from autora.experimentalist.sampler.falsification import falsification_sampler"
+python -c "from autora.experimentalist.sampler.falsification import falsification_sample"
 ```
