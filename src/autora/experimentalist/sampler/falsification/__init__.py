@@ -87,7 +87,7 @@ def falsification_sample(
 
     return new_conditions
 
-def falsification_score_sampler(
+def falsification_score_sample(
     condition_pool,
     model,
     reference_conditions: np.ndarray,
@@ -129,7 +129,7 @@ def falsification_score_sampler(
 
     predicted_observations = model.predict(reference_conditions)
 
-    return falsification_score_sampler_from_predictions(condition_pool,
+    return falsification_score_sample_from_predictions(condition_pool,
                                                         predicted_observations,
                                                         reference_conditions,
                                                         reference_observations,
@@ -140,7 +140,7 @@ def falsification_score_sampler(
                                                         plot)
 
 
-def falsification_score_sampler_from_predictions(
+def falsification_score_sample_from_predictions(
     condition_pool,
     predicted_observations: np.ndarray,
     reference_conditions: np.ndarray,
@@ -222,3 +222,5 @@ def falsification_score_sampler_from_predictions(
     return sorted_X[:num_samples], sorted_score[:num_samples]
 
 falsification_sampler = deprecated_alias(falsification_sample, "falsification_sampler")
+falsification_score_sampler = deprecated_alias(falsification_score_sample, "falsification_score_sampler")
+falsification_score_sampler_from_predictions = deprecated_alias(falsification_score_sample_from_predictions, "falsification_score_sampler_from_predictions")
