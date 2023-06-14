@@ -5,9 +5,9 @@ from sklearn.linear_model import LinearRegression, LogisticRegression
 
 from autora.experimentalist.pipeline import Pipeline
 from autora.experimentalist.sampler.falsification import (
-    falsification_sampler,
-    falsification_score_sampler,
-    falsification_score_sampler_from_predictions,
+    falsification_sample,
+    falsification_score_sample,
+    falsification_score_sample_from_predictions,
 )
 from autora.variable import DV, IV, ValueType, VariableCollection
 from tests.test_exp_falsification_pooler import get_sin_data, get_xor_data
@@ -107,7 +107,7 @@ def test_falsification_classification(
 
     # Run falsification sampler
     falsification_pipeline = Pipeline(
-        [("sampler", falsification_sampler)],
+        [("sampler", falsification_sample)],
         params={
             "sampler": dict(
                 condition_pool=X,
@@ -163,7 +163,7 @@ def test_falsification_regression(synthetic_linr_model, regression_data_to_test,
     )
 
     falsification_pipeline = Pipeline(
-        [("sampler", falsification_sampler)],
+        [("sampler", falsification_sample)],
         params={
             "sampler": dict(
                 condition_pool=X,
@@ -218,7 +218,7 @@ def test_falsification_regression_without_model(
     Y_predicted = model.predict(X_train)
 
     # get scores from falsification sampler
-    X_selected, scores = falsification_score_sampler_from_predictions(
+    X_selected, scores = falsification_score_sample_from_predictions(
         condition_pool=X,
         predicted_observations=Y_predicted,
         reference_conditions=X_train,
@@ -255,7 +255,7 @@ def test_falsification_reconstruction_without_model(
     X_reconstructed = X_train + np.sin(X_train)
 
     # get scores from falsification sampler
-    X_selected, scores = falsification_score_sampler_from_predictions(
+    X_selected, scores = falsification_score_sample_from_predictions(
         condition_pool=X,
         predicted_observations=X_reconstructed,
         reference_conditions=X_train,
@@ -307,7 +307,7 @@ def test_doc_example():
     model.fit(X.reshape(-1, 1), Y)
 
     # Sample four novel conditions
-    X_selected = falsification_sampler(
+    X_selected = falsification_sample(
         condition_pool=X_prime,
         model=model,
         reference_conditions=X,
@@ -320,7 +320,7 @@ def test_doc_example():
     X_selected = np.array(list(X_selected))
 
     # We may also obtain samples along with their z-scored novelty scores
-    X_selected, scores = falsification_score_sampler(
+    X_selected, scores = falsification_score_sample(
         condition_pool=X_prime,
         model=model,
         reference_conditions=X,
