@@ -59,7 +59,7 @@ experimental conditions away from the boundaries of $X$, as shown in the example
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from autora.variable import DV, IV, ValueType, VariableCollection
-from autora.experimentalist.pooler.falsification import falsification_pooler
+from autora.experimentalist.pooler.falsification import falsification_pool
 
 # Specify X and Y
 X = np.linspace(0, 2 * np.pi, 100)
@@ -89,7 +89,7 @@ model = LinearRegression()
 model.fit(X.reshape(-1, 1), Y)
 
 # Sample four novel conditions
-X_sampled = falsification_pooler(
+X_sampled = falsification_pool(
     model=model,
     reference_conditions=X,
     reference_observations=Y,
