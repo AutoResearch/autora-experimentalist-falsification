@@ -77,8 +77,8 @@ The selected conditons are predicted to yield the highest error from for the lin
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from autora.variable import DV, IV, ValueType, VariableCollection
-from autora.experimentalist.sampler.falsification import falsification_sampler
-from autora.experimentalist.sampler.falsification import falsification_score_sampler
+from autora.experimentalist.sampler.falsification import falsification_sample
+from autora.experimentalist.sampler.falsification import falsification_score_sample
 
 # Specify X and Y
 X = np.linspace(0, 2 * np.pi, 100)
@@ -109,7 +109,7 @@ model = LinearRegression()
 model.fit(X.reshape(-1, 1), Y)
 
 # Sample four novel conditions
-X_selected = falsification_sampler(
+X_selected = falsification_sample(
     condition_pool=X_prime,
     model=model,
     reference_conditions=X,
@@ -124,7 +124,7 @@ X_selected = np.array(list(X_selected))
 print(X_selected)
 
 # We may also obtain samples along with their z-scored novelty scores
-X_selected, scores = falsification_score_sampler(
+X_selected, scores = falsification_score_sample(
     condition_pool=X_prime,
     model=model,
     reference_conditions=X,
