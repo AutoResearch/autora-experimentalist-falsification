@@ -9,7 +9,7 @@ license = { text = "MIT License" }
 
 # ADD NEW DEPENDENCIES HERE
 dependencies = [
-    "autora-core",
+    "autora-core>=3.1.0",
     "torch"
 ]
 
