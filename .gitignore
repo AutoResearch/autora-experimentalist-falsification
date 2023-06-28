@@ -67,3 +67,6 @@ docs/reference/
 
 # Jupyter Notebook load data
 .ipynb_checkpoints
+
+# IDE Files
+/.idea/
