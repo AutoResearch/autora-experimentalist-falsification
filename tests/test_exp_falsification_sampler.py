@@ -57,6 +57,7 @@ def seed():
     Ensures that the results are the same each time the tests are run.
     """
     torch.manual_seed(180)
+    np.random.seed(180)
     return
 
 
@@ -76,7 +77,6 @@ def regression_data_to_test():
 def test_falsification_classification(
     synthetic_logr_model, classification_data_to_test, seed
 ):
-
     # Import model and data_closed_loop
     X_train, Y_train = get_xor_data()
     X = classification_data_to_test

@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, cast
+from typing import Optional, Tuple, cast, Iterable
 
 import numpy as np
 import torch
@@ -123,6 +123,9 @@ def falsification_score_sample(
 
     """
 
+    if isinstance(reference_conditions, Iterable):
+        reference_conditions = np.array(list(reference_conditions))
+
     reference_conditions = np.array(reference_conditions)
     if len(reference_conditions.shape) == 1:
         reference_conditions = reference_conditions.reshape(-1, 1)
@@ -176,9 +179,17 @@ def falsification_score_sample_from_predictions(
 
     """
 
-    X = np.array(condition_pool)
-    if len(X.shape) == 1:
-        X = X.reshape(-1, 1)
+    if isinstance(condition_pool, Iterable):
+        condition_pool = np.array(list(condition_pool))
+
+    if isinstance(condition_pool, list):
+        condition_pool = np.array(condition_pool)
+
+    if isinstance(condition_pool, np.ndarray) is False:
+        raise Exception("condition_pool must be a numpy array.")
+
+    if len(condition_pool.shape) == 1:
+        condition_pool = condition_pool.reshape(-1, 1)
 
     reference_conditions = np.array(reference_conditions)
     if len(reference_conditions.shape) == 1:
@@ -189,7 +200,7 @@ def falsification_score_sample_from_predictions(
         reference_observations = reference_observations.reshape(-1, 1)
 
     if num_samples is None:
-        num_samples = X.shape[0]
+        num_samples = condition_pool.shape[0]
 
     if metadata is not None:
         if metadata.dependent_variables[0].type == ValueType.CLASS:
@@ -210,16 +221,16 @@ def falsification_score_sample_from_predictions(
                                               plot)
 
     # now that the popper network is trained we can assign losses to all data points to be evaluated
-    popper_input = Variable(torch.from_numpy(X)).float()
+    popper_input = Variable(torch.from_numpy(condition_pool)).float()
     Y = popper_net(popper_input).detach().numpy().flatten()
     scaler = StandardScaler()
     score = scaler.fit_transform(Y.reshape(-1, 1)).flatten()
 
     # order rows in Y from highest to lowest
-    sorted_X = X[np.argsort(score)[::-1]]
+    sorted_conditions = condition_pool[np.argsort(score)[::-1]]
     sorted_score = score[np.argsort(score)[::-1]]
 
-    return sorted_X[:num_samples], sorted_score[:num_samples]
+    return sorted_conditions[:num_samples], sorted_score[:num_samples]
 
 falsification_sampler = deprecated_alias(falsification_sample, "falsification_sampler")
 falsification_score_sampler = deprecated_alias(falsification_score_sample, "falsification_score_sampler")
