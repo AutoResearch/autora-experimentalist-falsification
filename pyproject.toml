@@ -6,7 +6,6 @@ authors = [{ name = "Sebastian Musslick", email = "sebastian@musslick.de" }]
 dynamic = ["version"]
 readme = "README.md"
 license = { file = "LICENSE.md" }
-license = { text = "MIT License" }
 
 # ADD NEW DEPENDENCIES HERE
 dependencies = [
