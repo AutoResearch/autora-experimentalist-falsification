@@ -1,11 +1,12 @@
 import numpy as np
+import pandas as pd
 import pytest
 import torch
 from sklearn.linear_model import LinearRegression, LogisticRegression
 
 from autora.experimentalist.pipeline import Pipeline
 from autora.experimentalist.pooler.grid import grid_pool
-from autora.experimentalist.sampler.falsification import (
+from autora.experimentalist.falsification import (
     falsification_sample,
     falsification_score_sample,
     falsification_score_sample_from_predictions,
@@ -310,7 +311,7 @@ def test_iterator_input(synthetic_linr_model):
 
     X = grid_pool(metadata.independent_variables)
 
-    new_conditions, new_scores = falsification_score_sample(
+    new_conditions = falsification_sample(
                 condition_pool=X,
                 model=model,
                 reference_conditions=X_train,
@@ -323,6 +324,131 @@ def test_iterator_input(synthetic_linr_model):
             )
 
     assert new_conditions.shape[0] == 5
+
+
+def test_falsification_pandas(
+    synthetic_logr_model, classification_data_to_test, seed
+):
+    # Import model and data_closed_loop
+    X_train, Y_train = get_xor_data()
+    X = classification_data_to_test
+    model = synthetic_logr_model
+
+    X = pd.DataFrame(X, columns=["x1", "x2"])
+    # X_train = pd.DataFrame(X_train, columns=["x1", "x2"])
+    # Y_train = pd.DataFrame(Y_train, columns=["y"])
+
+    # Specify independent variables
+    iv1 = IV(
+        name="x1",
+        value_range=(0, 5),
+        units="intensity",
+        variable_label="stimulus 1",
+    )
+
+    iv2 = IV(
+        name="x2",
+        value_range=(0, 5),
+        units="intensity",
+        variable_label="stimulus 2",
+    )
+
+    # specify dependent variables
+    dv1 = DV(
+        name="y",
+        value_range=(0, 1),
+        units="class",
+        variable_label="class",
+        type=ValueType.CLASS,
+    )
+
+    # Variable collection with ivs and dvs
+    metadata = VariableCollection(
+        independent_variables=[iv1, iv2],
+        dependent_variables=[dv1],
+    )
+
+    # Run falsification sampler
+    falsification_pipeline = Pipeline(
+        [("sampler", falsification_sample)],
+        params={
+            "sampler": dict(
+                condition_pool=X,
+                model=model,
+                reference_conditions=X_train,
+                reference_observations=Y_train,
+                metadata=metadata,
+                num_samples=2,
+                training_epochs=1000,
+                training_lr=1e-3,
+            ),
+        },
+    )
+
+    samples = falsification_pipeline.run()
+
+    assert isinstance(samples, pd.DataFrame)
+    assert samples.columns.tolist() == ["x1", "x2"]
+
+    # Check that at least one of the resulting samples is the one that is
+    # underrepresented in the data_closed_loop used for model training
+
+    assert (np.array(samples.iloc[0]) == [1, 1]).all or (np.array(samples.iloc[1]) == [1, 1]).all
+
+def test_pandas_score():
+    # Specify X and Y
+    X = np.linspace(0, 2 * np.pi, 100)
+    Y = np.sin(X)
+    X_prime = np.linspace(0, 6.5, 14)
+
+    # We need to provide the pooler with some metadata specifying the independent and dependent variables
+    # Specify independent variable
+    iv = IV(
+        name="x",
+        value_range=(0, 2 * np.pi),
+    )
+
+    # specify dependent variable
+    dv = DV(
+        name="y",
+        type=ValueType.REAL,
+    )
+
+    # Variable collection with ivs and dvs
+    metadata = VariableCollection(
+        independent_variables=[iv],
+        dependent_variables=[dv],
+    )
+
+    # Fit a linear regression to the data
+    model = LinearRegression()
+    model.fit(X.reshape(-1, 1), Y)
+
+    X = pd.DataFrame(X, columns=["x"])
+    Y = pd.DataFrame(Y, columns=["y"])
+    X_prime = pd.DataFrame(X_prime, columns=["x"])
+
+    # Sample four novel conditions
+    X_selected = falsification_sample(
+        condition_pool=X_prime,
+        model=model,
+        reference_conditions=X,
+        reference_observations=Y,
+        metadata=metadata,
+        num_samples=4,
+    )
+
+    assert isinstance(X_selected, pd.DataFrame)
+    assert X_selected.columns.tolist() == ["x"]
+
+    # We may also obtain samples along with their z-scored novelty scores
+    X_selected = falsification_score_sample(
+        condition_pool=X_prime,
+        model=model,
+        reference_conditions=X,
+        reference_observations=Y,
+        metadata=metadata,
+        num_samples=4)
 
 def test_doc_example():
     # Specify X and Y
