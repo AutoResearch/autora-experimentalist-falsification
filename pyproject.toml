@@ -10,7 +10,8 @@ license = {file = "LICENSE"}
 # ADD NEW DEPENDENCIES HERE
 dependencies = [
     "autora-core>=3.1.0",
-    "torch"
+    "torch",
+    "pandas"
 ]
 
 [project.optional-dependencies]
