@@ -5,7 +5,7 @@ from torch.autograd import Variable
 from typing import Optional, Iterable, Union
 
 from autora.variable import ValueType, VariableCollection
-from autora.experimentalist.falsification.utils import class_to_onehot, get_iv_limits
+from autora.experimentalist.falsification.utils import class_to_onehot, get_iv_limits, align_dataframe_to_ivs
 from autora.experimentalist.falsification.popper_net import PopperNet, train_popper_net_with_model, train_popper_net
 from autora.utils.deprecation import deprecated_alias
 from sklearn.preprocessing import StandardScaler
@@ -58,6 +58,9 @@ def pool(
     """
 
     # format input
+
+    if isinstance(reference_conditions, pd.DataFrame):
+        reference_conditions = align_dataframe_to_ivs(reference_conditions, metadata.independent_variables)
 
     reference_conditions_np = np.array(reference_conditions)
     if len(reference_conditions_np.shape) == 1:
@@ -171,7 +174,7 @@ def pool(
     return iter(x)
 
 def sample(
-    condition_pool: Union[pd.DataFrame, np.ndarray],
+    conditions: Union[pd.DataFrame, np.ndarray],
     model,
     reference_conditions: Union[pd.DataFrame, np.ndarray],
     reference_observations: Union[pd.DataFrame, np.ndarray],
@@ -189,7 +192,7 @@ def sample(
     those with the highest loss.
 
     Args:
-        condition_pool: The candidate samples of experimental conditions to be evaluated.
+        conditions: The candidate samples of experimental conditions to be evaluated.
         model: Scikit-learn model, could be either a classification or regression model
         reference_conditions: Experimental conditions that the model was trained on
         reference_observations: Observations that the model was trained to predict
@@ -206,11 +209,11 @@ def sample(
 
     # format input
 
-    if isinstance(condition_pool, Iterable) and not isinstance(condition_pool, pd.DataFrame):
-        condition_pool = np.array(list(condition_pool))
+    if isinstance(conditions, Iterable) and not isinstance(conditions, pd.DataFrame):
+        conditions = np.array(list(conditions))
 
-    condition_pool_copy = condition_pool.copy()
-    condition_pool = np.array(condition_pool)
+    condition_pool_copy = conditions.copy()
+    conditions = np.array(conditions)
     reference_observations = np.array(reference_observations)
     reference_conditions = np.array(reference_conditions)
     if len(reference_conditions.shape) == 1:
@@ -234,7 +237,7 @@ def sample(
         predicted_observations = predicted_observations.reshape(-1, 1)
 
     new_conditions, scores = falsification_score_sample_from_predictions(
-        condition_pool,
+        conditions,
         predicted_observations,
         reference_conditions,
         reference_observations,
@@ -252,7 +255,7 @@ def sample(
 
 
 def falsification_score_sample(
-    condition_pool: Union[pd.DataFrame, np.ndarray],
+    conditions: Union[pd.DataFrame, np.ndarray],
     model,
     reference_conditions: Union[pd.DataFrame, np.ndarray],
     reference_observations: Union[pd.DataFrame, np.ndarray],
@@ -270,7 +273,7 @@ def falsification_score_sample(
     those with the highest loss.
 
     Args:
-        condition_pool: The candidate samples of experimental conditions to be evaluated.
+        conditions: The candidate samples of experimental conditions to be evaluated.
         model: Scikit-learn model, could be either a classification or regression model
         reference_conditions: Experimental conditions that the model was trained on
         reference_observations: Observations that the model was trained to predict
@@ -287,11 +290,11 @@ def falsification_score_sample(
 
     """
 
-    if isinstance(condition_pool, Iterable) and not isinstance(condition_pool, pd.DataFrame):
-        condition_pool = np.array(list(condition_pool))
+    if isinstance(conditions, Iterable) and not isinstance(conditions, pd.DataFrame):
+        conditions = np.array(list(conditions))
 
-    condition_pool_copy = condition_pool.copy()
-    condition_pool = np.array(condition_pool)
+    condition_pool_copy = conditions.copy()
+    conditions = np.array(conditions)
     reference_conditions = np.array(reference_conditions)
     reference_observations = np.array(reference_observations)
 
@@ -300,7 +303,7 @@ def falsification_score_sample(
 
     predicted_observations = model.predict(reference_conditions)
 
-    new_conditions, new_scores =  falsification_score_sample_from_predictions(condition_pool,
+    new_conditions, new_scores =  falsification_score_sample_from_predictions(conditions,
                                                         predicted_observations,
                                                         reference_conditions,
                                                         reference_observations,
@@ -321,7 +324,7 @@ def falsification_score_sample(
 
 
 def falsification_score_sample_from_predictions(
-    condition_pool: Union[pd.DataFrame, np.ndarray],
+    conditions: Union[pd.DataFrame, np.ndarray],
     predicted_observations: Union[pd.DataFrame, np.ndarray],
     reference_conditions: Union[pd.DataFrame, np.ndarray],
     reference_observations: np.ndarray,
@@ -339,7 +342,7 @@ def falsification_score_sample_from_predictions(
     those with the highest loss.
 
     Args:
-        condition_pool: The candidate samples of experimental conditions to be evaluated.
+        conditions: The candidate samples of experimental conditions to be evaluated.
         predicted_observations: Prediction obtained from the model for the set of reference experimental conditions
         reference_conditions: Experimental conditions that the model was trained on
         reference_observations: Observations that the model was trained to predict
@@ -356,12 +359,12 @@ def falsification_score_sample_from_predictions(
 
     """
 
-    condition_pool = np.array(condition_pool)
+    conditions = np.array(conditions)
     reference_conditions = np.array(reference_conditions)
     reference_observations = np.array(reference_observations)
 
-    if len(condition_pool.shape) == 1:
-        condition_pool = condition_pool.reshape(-1, 1)
+    if len(conditions.shape) == 1:
+        conditions = conditions.reshape(-1, 1)
 
     reference_conditions = np.array(reference_conditions)
     if len(reference_conditions.shape) == 1:
@@ -372,7 +375,7 @@ def falsification_score_sample_from_predictions(
         reference_observations = reference_observations.reshape(-1, 1)
 
     if num_samples is None:
-        num_samples = condition_pool.shape[0]
+        num_samples = conditions.shape[0]
 
     if metadata is not None:
         if metadata.dependent_variables[0].type == ValueType.CLASS:
@@ -393,13 +396,13 @@ def falsification_score_sample_from_predictions(
                                               plot)
 
     # now that the popper network is trained we can assign losses to all data points to be evaluated
-    popper_input = Variable(torch.from_numpy(condition_pool)).float()
+    popper_input = Variable(torch.from_numpy(conditions)).float()
     Y = popper_net(popper_input).detach().numpy().flatten()
     scaler = StandardScaler()
     score = scaler.fit_transform(Y.reshape(-1, 1)).flatten()
 
     # order rows in Y from highest to lowest
-    sorted_conditions = condition_pool[np.argsort(score)[::-1]]
+    sorted_conditions = conditions[np.argsort(score)[::-1]]
     sorted_score = score[np.argsort(score)[::-1]]
 
     return sorted_conditions[0:num_samples], sorted_score[0:num_samples]

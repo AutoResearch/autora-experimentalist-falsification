@@ -112,7 +112,7 @@ def test_falsification_classification(
         [("sampler", falsification_sample)],
         params={
             "sampler": dict(
-                condition_pool=X,
+                conditions=X,
                 model=model,
                 reference_conditions=X_train,
                 reference_observations=Y_train,
@@ -168,7 +168,7 @@ def test_falsification_regression(synthetic_linr_model, regression_data_to_test,
         [("sampler", falsification_sample)],
         params={
             "sampler": dict(
-                condition_pool=X,
+                conditions=X,
                 model=model,
                 reference_conditions=X_train,
                 reference_observations=Y_train,
@@ -221,7 +221,7 @@ def test_falsification_regression_without_model(
 
     # get scores from falsification sampler
     X_selected, scores = falsification_score_sample_from_predictions(
-        condition_pool=X,
+        conditions=X,
         predicted_observations=Y_predicted,
         reference_conditions=X_train,
         reference_observations=Y_train,
@@ -258,7 +258,7 @@ def test_falsification_reconstruction_without_model(
 
     # get scores from falsification sampler
     X_selected, scores = falsification_score_sample_from_predictions(
-        condition_pool=X,
+        conditions=X,
         predicted_observations=X_reconstructed,
         reference_conditions=X_train,
         reference_observations=X_train,
@@ -312,7 +312,7 @@ def test_iterator_input(synthetic_linr_model):
     X = grid_pool(metadata.independent_variables)
 
     new_conditions = falsification_sample(
-                condition_pool=X,
+                conditions=X,
                 model=model,
                 reference_conditions=X_train,
                 reference_observations=Y_train,
@@ -373,7 +373,7 @@ def test_falsification_pandas(
         [("sampler", falsification_sample)],
         params={
             "sampler": dict(
-                condition_pool=X,
+                conditions=X,
                 model=model,
                 reference_conditions=X_train,
                 reference_observations=Y_train,
@@ -430,7 +430,7 @@ def test_pandas_score():
 
     # Sample four novel conditions
     X_selected = falsification_sample(
-        condition_pool=X_prime,
+        conditions=X_prime,
         model=model,
         reference_conditions=X,
         reference_observations=Y,
@@ -443,7 +443,7 @@ def test_pandas_score():
 
     # We may also obtain samples along with their z-scored novelty scores
     X_selected = falsification_score_sample(
-        condition_pool=X_prime,
+        conditions=X_prime,
         model=model,
         reference_conditions=X,
         reference_observations=Y,
@@ -481,7 +481,7 @@ def test_doc_example():
 
     # Sample four novel conditions
     X_selected = falsification_sample(
-        condition_pool=X_prime,
+        conditions=X_prime,
         model=model,
         reference_conditions=X,
         reference_observations=Y,
@@ -493,10 +493,12 @@ def test_doc_example():
     X_selected = np.array(list(X_selected))
 
     # We may also obtain samples along with their z-scored novelty scores
-    X_selected, scores = falsification_score_sample(
-        condition_pool=X_prime,
+    X_selected = falsification_score_sample(
+        conditions=X_prime,
         model=model,
         reference_conditions=X,
         reference_observations=Y,
         metadata=metadata,
         num_samples=4)
+
+    print(X_selected)
