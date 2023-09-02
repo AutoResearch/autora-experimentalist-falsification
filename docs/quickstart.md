@@ -4,7 +4,7 @@ You will need:
 
 - `python` 3.8 or greater: [https://www.python.org/downloads/](https://www.python.org/downloads/)
 
-*Novelty Sampler* is a part of the `autora` package:
+*Falsification Experimentalist* is a part of the `autora` package:
 
 ```shell
 pip install -U autora["experimentalist-falsification"]
