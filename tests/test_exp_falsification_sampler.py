@@ -5,7 +5,7 @@ import torch
 from sklearn.linear_model import LinearRegression, LogisticRegression
 
 from autora.experimentalist.pipeline import Pipeline
-from autora.experimentalist.pooler.grid import grid_pool
+from autora.experimentalist.grid import pool
 from autora.experimentalist.falsification import (
     falsification_sample,
     falsification_score_sample,
@@ -309,7 +309,7 @@ def test_iterator_input(synthetic_linr_model):
         dependent_variables=[dv],
     )
 
-    X = grid_pool(metadata.independent_variables)
+    X = pool(metadata)
 
     new_conditions = falsification_sample(
                 conditions=X,

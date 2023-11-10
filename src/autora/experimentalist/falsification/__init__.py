@@ -412,7 +412,7 @@ falsification_pool.__doc__ = """Alias for pool"""
 falsification_pooler = deprecated_alias(falsification_pool, "falsification_pooler")
 
 falsification_sample = sample
-falsification_pool.__doc__ = """Alias for pool"""
+falsification_pool.__doc__ = """Alias for sample"""
 falsification_sampler = deprecated_alias(falsification_sample, "falsification_sampler")
 falsification_score_sampler = deprecated_alias(falsification_score_sample, "falsification_score_sampler")
 falsification_score_sampler_from_predictions = deprecated_alias(falsification_score_sample_from_predictions, "falsification_score_sampler_from_predictions")
