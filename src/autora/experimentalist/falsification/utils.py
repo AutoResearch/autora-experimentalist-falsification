@@ -1,7 +1,10 @@
-from typing import Optional, Tuple, List, cast
-from autora.variable import VariableCollection, IV
+from typing import List, Optional, Tuple, cast
+
 import numpy as np
 import pandas as pd
+
+from autora.variable import IV, VariableCollection
+
 
 def plot_falsification_diagnostics(
     losses,
@@ -29,9 +32,17 @@ def plot_falsification_diagnostics(
     plot_input = plot_input[plot_input_order]
     popper_target = popper_target[plot_input_order]
     # popper_prediction = popper_prediction[plot_input_order]
-    plt.plot(popper_input_full, popper_prediction.detach().numpy(), label="Predicted MSE of the Model")
+    plt.plot(
+        popper_input_full,
+        popper_prediction.detach().numpy(),
+        label="Predicted MSE of the Model",
+    )
     plt.scatter(
-        plot_input, popper_target.detach().numpy(), s=20, c="red", label="True MSE of the Model"
+        plot_input,
+        popper_target.detach().numpy(),
+        s=20,
+        c="red",
+        label="True MSE of the Model",
     )
     plt.xlabel("Experimental Condition X")
     plt.ylabel("MSE of Model")
@@ -56,7 +67,6 @@ def plot_falsification_diagnostics(
     plt.title("Model Prediction Vs. Data")
     plt.legend()
     plt.show()
-
 
 
 def class_to_onehot(y: np.array, n_classes: Optional[int] = None):
@@ -88,9 +98,9 @@ def class_to_onehot(y: np.array, n_classes: Optional[int] = None):
 
 
 def get_iv_limits(
-        reference_conditions: np.ndarray,
-        metadata: VariableCollection,
-                  ):
+    reference_conditions: np.ndarray,
+    metadata: VariableCollection,
+):
     """
     Get the limits of the independent variables
 
