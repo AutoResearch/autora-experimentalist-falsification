@@ -1,11 +1,15 @@
-import torch
-import numpy as np
-from torch import nn
 from typing import List
-from .utils import plot_falsification_diagnostics
+
+import numpy as np
+import torch
 from sklearn.preprocessing import StandardScaler
-from autora.variable import VariableCollection
+from torch import nn
 from torch.autograd import Variable
+
+from autora.variable import VariableCollection
+
+from .utils import plot_falsification_diagnostics
+
 
 # define the network
 class PopperNet(nn.Module):
@@ -81,7 +85,9 @@ def train_popper_net(
     n_output = 1  # only predicting one MSE
 
     # get input pattern for popper net
-    popper_input = Variable(torch.from_numpy(reference_conditions), requires_grad=False).float()
+    popper_input = Variable(
+        torch.from_numpy(reference_conditions), requires_grad=False
+    ).float()
 
     # get target pattern for popper net
     if isinstance(model_prediction, np.ndarray) is False:
@@ -126,7 +132,9 @@ def train_popper_net(
 
     if plot:
         if len(iv_limit_list) > 1:
-            Warning("Plotting currently not supported for more than two independent variables.")
+            Warning(
+                "Plotting currently not supported for more than two independent variables."
+            )
         else:
             popper_input_full = np.linspace(
                 iv_limit_list[0][0], iv_limit_list[0][1], 1000
@@ -189,11 +197,13 @@ def train_popper_net_with_model(
 
     model_prediction = model_predict(reference_conditions)
 
-    return train_popper_net(model_prediction,
-                         reference_conditions,
-                         reference_observations,
-                         metadata,
-                         iv_limit_list,
-                         training_epochs,
-                         training_lr,
-                         plot)
+    return train_popper_net(
+        model_prediction,
+        reference_conditions,
+        reference_observations,
+        metadata,
+        iv_limit_list,
+        training_epochs,
+        training_lr,
+        plot,
+    )

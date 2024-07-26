@@ -51,9 +51,7 @@ def synthetic_linr_model():
     return model
 
 
-def test_falsification_pool_classification(
-    synthetic_logr_model, seed
-):
+def test_falsification_pool_classification(synthetic_logr_model, seed):
 
     # Import model and data_closed_loop
     conditions, observations = get_xor_data()
@@ -93,18 +91,19 @@ def test_falsification_pool_classification(
         optimization_epochs=1000,
         training_lr=1e-3,
         optimization_lr=1e-3,
-        limit_offset=10 ** -10,
+        limit_offset=10**-10,
         limit_repulsion=0,
-        plot=False
+        plot=False,
     )
 
     # convert Iterable to numpy array
-    new_conditions = np.array(list(new_conditions))
+    new_conditions = np.array(new_conditions)
 
     # Check that at least one of the resulting samples is the one that is
     # underrepresented in the data_closed_loop used for model training
-    assert (new_conditions[0,0] > 0.99 and new_conditions [0,1] > 0.99) or \
-           (new_conditions[1,0] > 0.99 and new_conditions [1,1] > 0.99)
+    assert (new_conditions[0, 0] > 0.99 and new_conditions[0, 1] > 0.99) or (
+        new_conditions[1, 0] > 0.99 and new_conditions[1, 1] > 0.99
+    )
 
 
 def test_falsification_pool_regression(synthetic_linr_model, seed):
@@ -148,20 +147,22 @@ def test_falsification_pool_regression(synthetic_linr_model, seed):
         optimization_lr=5e-3,
         limit_offset=0,
         limit_repulsion=0.01,
-        plot=False
+        plot=False,
     )
 
     # convert Iterable to numpy array
-    new_conditions = np.array(list(new_conditions))
+    new_conditions = np.array(new_conditions)
 
     for condition in new_conditions:
-        assert condition < 0.1 or condition > 6.1 or \
-               (condition < 2.5 and condition > 1.5)  or \
-               (condition < 5 and condition > 4)
+        assert (
+            condition < 0.1
+            or condition > 6.1
+            or (condition < 2.5 and condition > 1.5)
+            or (condition < 5 and condition > 4)
+        )
 
-def test_falsification_pandas(
-    synthetic_logr_model, seed
-):
+
+def test_falsification_pandas(synthetic_logr_model, seed):
 
     # Import model and data_closed_loop
     conditions, observations = get_xor_data()
@@ -211,25 +212,28 @@ def test_falsification_pandas(
         optimization_epochs=1000,
         training_lr=1e-3,
         optimization_lr=1e-3,
-        limit_offset=10 ** -10,
+        limit_offset=10**-10,
         limit_repulsion=0,
-        plot=False
+        plot=False,
     )
 
     # convert Iterable to numpy array
-    new_conditions = np.array(list(new_conditions))
+    new_conditions = np.array(new_conditions)
 
     # Check that at least one of the resulting samples is the one that is
     # underrepresented in the data_closed_loop used for model training
-    assert (new_conditions[0,0] > 0.99 and new_conditions [0,1] > 0.99) or \
-           (new_conditions[1,0] > 0.99 and new_conditions [1,1] > 0.99)
+    assert (new_conditions[0, 0] > 0.99 and new_conditions[0, 1] > 0.99) or (
+        new_conditions[1, 0] > 0.99 and new_conditions[1, 1] > 0.99
+    )
+
 
 def test_doc_example():
     # Specify X and Y
     X = np.linspace(0, 2 * np.pi, 100)
     Y = np.sin(X)
 
-    # We need to provide the pooler with some metadata specifying the independent and dependent variables
+    # We need to provide the pooler with some metadata specifying the
+    # independent and dependent variables
     # Specify independent variable
     iv = IV(
         name="x",
@@ -263,6 +267,6 @@ def test_doc_example():
     )
 
     # convert Iterable to numpy array
-    X_sampled = np.array(list(X_sampled))
+    X_sampled = np.array(X_sampled)
 
     print(X_sampled)

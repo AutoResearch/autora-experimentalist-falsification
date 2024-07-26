@@ -4,13 +4,13 @@ import pytest
 import torch
 from sklearn.linear_model import LinearRegression, LogisticRegression
 
-from autora.experimentalist.pipeline import Pipeline
-from autora.experimentalist.grid import pool
 from autora.experimentalist.falsification import (
     falsification_sample,
     falsification_score_sample,
     falsification_score_sample_from_predictions,
 )
+from autora.experimentalist.grid import pool
+from autora.experimentalist.pipeline import Pipeline
 from autora.variable import DV, IV, ValueType, VariableCollection
 from tests.test_exp_falsification_pooler import get_sin_data, get_xor_data
 
@@ -124,7 +124,7 @@ def test_falsification_classification(
         },
     )
 
-    samples = falsification_pipeline.run()
+    samples = np.array(falsification_pipeline.run())
 
     # Check that at least one of the resulting samples is the one that is
     # underrepresented in the data_closed_loop used for model training
@@ -181,7 +181,7 @@ def test_falsification_regression(synthetic_linr_model, regression_data_to_test,
         },
     )
 
-    sample = falsification_pipeline.run()
+    sample = np.array(falsification_pipeline.run())
 
     # the first value should be close to one of the local maxima of the
     # sine function
@@ -193,7 +193,11 @@ def test_falsification_regression(synthetic_linr_model, regression_data_to_test,
             or np.round(sample[1], 2 == 4.2)
         )
 
-    assert np.round(sample[2], 2) == 1.8 or np.round(sample[2], 2) == 4.2 or np.round(sample[2], 2) == 6
+    assert (
+        np.round(sample[2], 2) == 1.8
+        or np.round(sample[2], 2) == 4.2
+        or np.round(sample[2], 2) == 6
+    )
     if np.round(sample[2], 2) == 1.8:
         assert np.round(sample[3], 2) == 4.2
 
@@ -278,6 +282,7 @@ def test_falsification_reconstruction_without_model(
     assert np.round(X_selected[0, 0], 4) == 1.8 or np.round(X_selected[0, 0], 4) == 4.8
     assert np.round(X_selected[1, 0], 4) == 1.8 or np.round(X_selected[1, 0], 4) == 4.8
 
+
 def test_iterator_input(synthetic_linr_model):
     # Import model and data_closed_loop
     X_train, Y_train = get_sin_data()
@@ -311,24 +316,22 @@ def test_iterator_input(synthetic_linr_model):
 
     X = pool(metadata)
 
-    new_conditions = falsification_sample(
-                conditions=X,
-                model=model,
-                reference_conditions=X_train,
-                reference_observations=Y_train,
-                metadata=metadata,
-                num_samples=5,
-                training_epochs=1000,
-                training_lr=1e-3,
-                plot=False,
-            )
+    new_conditions = np.array(falsification_sample(
+        conditions=X,
+        model=model,
+        reference_conditions=X_train,
+        reference_observations=Y_train,
+        metadata=metadata,
+        num_samples=5,
+        training_epochs=1000,
+        training_lr=1e-3,
+        plot=False,
+    ))
 
     assert new_conditions.shape[0] == 5
 
 
-def test_falsification_pandas(
-    synthetic_logr_model, classification_data_to_test, seed
-):
+def test_falsification_pandas(synthetic_logr_model, classification_data_to_test, seed):
     # Import model and data_closed_loop
     X_train, Y_train = get_xor_data()
     X = classification_data_to_test
@@ -393,7 +396,10 @@ def test_falsification_pandas(
     # Check that at least one of the resulting samples is the one that is
     # underrepresented in the data_closed_loop used for model training
 
-    assert (np.array(samples.iloc[0]) == [1, 1]).all or (np.array(samples.iloc[1]) == [1, 1]).all
+    assert (np.array(samples.iloc[0]) == [1, 1]).all or (
+        np.array(samples.iloc[1]) == [1, 1]
+    ).all
+
 
 def test_pandas_score():
     # Specify X and Y
@@ -401,7 +407,8 @@ def test_pandas_score():
     Y = np.sin(X)
     X_prime = np.linspace(0, 6.5, 14)
 
-    # We need to provide the pooler with some metadata specifying the independent and dependent variables
+    # We need to provide the pooler with some metadata specifying the
+    # independent and dependent variables
     # Specify independent variable
     iv = IV(
         name="x",
@@ -448,7 +455,9 @@ def test_pandas_score():
         reference_conditions=X,
         reference_observations=Y,
         metadata=metadata,
-        num_samples=4)
+        num_samples=4,
+    )
+
 
 def test_doc_example():
     # Specify X and Y
@@ -456,7 +465,8 @@ def test_doc_example():
     Y = np.sin(X)
     X_prime = np.linspace(0, 6.5, 14)
 
-    # We need to provide the pooler with some metadata specifying the independent and dependent variables
+    # We need to provide the pooler with some metadata specifying the
+    # independent and dependent variables
     # Specify independent variable
     iv = IV(
         name="x",
@@ -499,6 +509,7 @@ def test_doc_example():
         reference_conditions=X,
         reference_observations=Y,
         metadata=metadata,
-        num_samples=4)
+        num_samples=4,
+    )
 
     print(X_selected)
