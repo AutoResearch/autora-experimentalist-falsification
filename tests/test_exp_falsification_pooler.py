@@ -97,7 +97,7 @@ def test_falsification_pool_classification(synthetic_logr_model, seed):
     )
 
     # convert Iterable to numpy array
-    new_conditions = np.array(list(new_conditions))
+    new_conditions = np.array(new_conditions)
 
     # Check that at least one of the resulting samples is the one that is
     # underrepresented in the data_closed_loop used for model training
@@ -151,7 +151,7 @@ def test_falsification_pool_regression(synthetic_linr_model, seed):
     )
 
     # convert Iterable to numpy array
-    new_conditions = np.array(list(new_conditions))
+    new_conditions = np.array(new_conditions)
 
     for condition in new_conditions:
         assert (
@@ -218,7 +218,7 @@ def test_falsification_pandas(synthetic_logr_model, seed):
     )
 
     # convert Iterable to numpy array
-    new_conditions = np.array(list(new_conditions))
+    new_conditions = np.array(new_conditions)
 
     # Check that at least one of the resulting samples is the one that is
     # underrepresented in the data_closed_loop used for model training
@@ -267,6 +267,6 @@ def test_doc_example():
     )
 
     # convert Iterable to numpy array
-    X_sampled = np.array(list(X_sampled))
+    X_sampled = np.array(X_sampled)
 
     print(X_sampled)

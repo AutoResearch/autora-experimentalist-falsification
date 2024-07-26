@@ -124,7 +124,7 @@ def test_falsification_classification(
         },
     )
 
-    samples = falsification_pipeline.run()
+    samples = np.array(falsification_pipeline.run())
 
     # Check that at least one of the resulting samples is the one that is
     # underrepresented in the data_closed_loop used for model training
@@ -181,7 +181,7 @@ def test_falsification_regression(synthetic_linr_model, regression_data_to_test,
         },
     )
 
-    sample = falsification_pipeline.run()
+    sample = np.array(falsification_pipeline.run())
 
     # the first value should be close to one of the local maxima of the
     # sine function
@@ -316,7 +316,7 @@ def test_iterator_input(synthetic_linr_model):
 
     X = pool(metadata)
 
-    new_conditions = falsification_sample(
+    new_conditions = np.array(falsification_sample(
         conditions=X,
         model=model,
         reference_conditions=X_train,
@@ -326,7 +326,7 @@ def test_iterator_input(synthetic_linr_model):
         training_epochs=1000,
         training_lr=1e-3,
         plot=False,
-    )
+    ))
 
     assert new_conditions.shape[0] == 5
 
