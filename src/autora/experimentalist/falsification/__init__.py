@@ -245,8 +245,9 @@ def sample(
 
     if callable(model_predict) is False or model_predict is None:
         raise Exception("Model must have `predict` or `predict_proba` method.")
+    else:
+        predicted_observations = model.predict(reference_conditions)
 
-    predicted_observations = model_predict(reference_conditions)
     if isinstance(predicted_observations, np.ndarray) is False:
         try:
             predicted_observations = np.array(predicted_observations)
