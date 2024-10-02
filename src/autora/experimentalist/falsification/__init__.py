@@ -240,13 +240,14 @@ def sample(
 
     # get target pattern for popper net
     model_predict = getattr(model, "predict_proba", None)
-    if callable(model_predict) is False:
-        model_predict = getattr(model, "predict", None)
-
     if callable(model_predict) is False or model_predict is None:
-        raise Exception("Model must have `predict` or `predict_proba` method.")
+        model_predict = getattr(model, "predict", None)
+        if callable(model_predict) is False or model_predict is None:
+            raise Exception("Model must have `predict` or `predict_proba` method.")
+        else:
+            predicted_observations = model.predict(reference_conditions)
     else:
-        predicted_observations = model.predict(reference_conditions)
+        predicted_observations = model.predict_proba(reference_conditions)
 
     if isinstance(predicted_observations, np.ndarray) is False:
         try:
